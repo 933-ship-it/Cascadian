@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeonSpin Casino</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Roboto:wght@500&display=swap" rel="stylesheet">
+  <style>
+    /* ...[CSS same as previous, omitted for brevity, use your prior clean CSS here]... */
+    body { background: linear-gradient(135deg,#1a1a2e 0%, #2c5364 100%); color: #fff; font-family: 'Roboto', sans-serif; margin:0;}
+    .center { display:flex; flex-direction:column; align-items:center; justify-content:center;}
+    .intro { min-height: 100vh; background:linear-gradient(135deg,#1a1a2e 0%, #232347 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:32px; padding:0 24px;}
+    .intro-title { font-family:'Orbitron',sans-serif; font-size:2.8em; color:#00fff0; text-shadow:0 0 24px #00fff0,0 0 12px #ff00cc; margin-bottom:8px; letter-spacing:3px;}
+    .warning-panel { background:#f44336; color:#fff; padding:32px 20px; border-radius:20px; border-bottom:4px solid #ff9800; box-shadow:0 4px 40px #000b; max-width:460px; font-size:1.2em; text-align:center; font-weight:bold; margin-bottom:12px;}
+    .enter-btn { font-family:'Orbitron',sans-serif; font-size:1.4em; padding:18px 60px; border:none; border-radius:14px; background:linear-gradient(90deg,#00fff0 0,#ff00cc 100%); color:#212128; font-weight:bold; cursor:pointer; box-shadow:0 0 16px #00fff0; transition:background 0.2s, transform 0.13s;}
+    .enter-btn:active { transform:scale(0.97);}
+    .casino-app { min-height:100vh; display:flex; flex-direction:column;}
+    .tab-bar { display:flex; gap:0; justify-content:center; background:#232347; border-radius:0 0 20px 20px; box-shadow:0 6px 30px #0007;}
+    .tab { flex:1; padding:22px 0; font-family:'Orbitron',sans-serif; font-size:1.18em; color:#fff; background:transparent; border:none; border-bottom:4px solid transparent; cursor:pointer; letter-spacing:2px; transition:border 0.18s, background 0.18s;}
+    .tab.active { border-bottom:4px solid #ff00cc; background:#231a2c; color:#00fff0; font-weight:bold;}
+    .casino-panels { display:flex; justify-content:center; align-items:flex-start; flex:1; padding:32px 0 0 0; min-height:70vh; background:linear-gradient(135deg,#1a1a2e 70%, #1e3c72 100%);}
+    .panel { background:rgba(36,36,60,0.97); border-radius:20px; box-shadow:0 4px 40px #000b; padding:38px 36px 38px 36px; margin:0 18px; min-width:330px; max-width:420px; width:100%; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px;}
+    @media (max-width: 800px) { .casino-panels {flex-direction:column;} .panel { margin:18px auto; } }
+    h2 { font-family:'Orbitron',sans-serif; color:#00fff0; font-size:2em; margin:0 0 10px 0; letter-spacing:2px; text-shadow:0 0 8px #00fff0;}
+    .slot-machine { display:flex; justify-content:center; align-items:center; background:#101032; border-radius:18px; margin:28px 0 18px 0; box-shadow:0 0 32px #00fff044; padding:18px 0; border:2px solid #ff00cc; position:relative; gap:18px;}
+    .reel { font-size:3.6em; margin:0 12px; width:1.2em; text-shadow:0 0 18px #ff00cc, 0 0 6px #00fff0; animation:neon-flicker 2s infinite alternate;}
+    @keyframes neon-flicker { 0%,100%{text-shadow:0 0 18px #ff00cc,0 0 6px #00fff0;} 80%{text-shadow:0 0 10px #ff00cc,0 0 2px #00fff0;} 90%{opacity:0.92;} }
+    .spin-btn, .buy-btn { font-family:'Orbitron',sans-serif; font-size:1.27em; padding:15px 44px; border:none; border-radius:12px; background:linear-gradient(90deg,#00fff0 0,#ff00cc 100%); color:#212128; font-weight:bold; cursor:pointer; margin:10px 0 0 0; box-shadow:0 0 16px #00fff088; outline:none; transition:transform 0.13s, box-shadow 0.18s;}
+    .spin-btn:active, .buy-btn:active { transform:scale(0.97); box-shadow:0 0 4px #ff00cc;}
+    .spin-btn:disabled { background:#33364c; color:#aaa; cursor:not-allowed; box-shadow:none;}
+    .info-bar { margin:12px 0 8px 0; font-size:1.13em; color:#ff00cc; letter-spacing:1.1px;}
+    .stat { color:#00fff0; font-weight:bold;}
+    .result-message { font-size:1.28em; color:#ff00cc; margin:14px 0 0 0; font-family:'Orbitron',sans-serif;}
+    .keep-playing { margin:16px 0 0 0; color:#00fff0; font-size:1.07em; font-style:italic; text-shadow:0 0 10px #00fff033;}
+    .buy-options { display:flex; flex-direction:column; gap:22px; margin:26px 0 0 0; align-items:center;}
+    .footer { color:#bbb; font-size:.99em; margin:40px 0 10px 0; text-align:center; opacity:0.75; letter-spacing:1.1px;}
+  </style>
+</head>
+<body>
+  <div id="intro" class="intro">
+    <div class="intro-title">🎰 NeonSpin Casino 🎰</div>
+    <div class="warning-panel">
+      ⚠️ <b>WARNING</b>: Gambling is bad and can be addictive. This game is designed so you will never win. Please do not develop a gambling habit. 
+      If you or someone you know has a gambling problem, seek help immediately.<br/><br/>
+      <span style="font-weight:normal;font-size:0.94em;opacity:0.86;">
+        <a href="https://www.begambleaware.org/" style="color:#fff;text-decoration:underline;" target="_blank" rel="noopener">BeGambleAware.org</a>
+      </span>
+    </div>
+    <button class="enter-btn" onclick="enterCasino()">Enter Casino</button>
+  </div>
+
+  <div id="casino-app" class="casino-app" style="display:none;">
+    <div class="tab-bar">
+      <button class="tab active" id="tab-slot" onclick="switchTab('slot')">Slot Machine</button>
+      <button class="tab" id="tab-coins" onclick="switchTab('coins')">Buy Coins</button>
+    </div>
+    <div class="casino-panels">
+      <!-- SLOT MACHINE PANEL -->
+      <div class="panel" id="panel-slot">
+        <h2>Slot Machine</h2>
+        <div class="info-bar">
+          1 Coin = 1 Spin = <span class="stat">$0.077</span> <br>
+          Win Chance: <span class="stat">0%</span> <br>
+          Your Coins: <span class="stat" id="coin-count">0</span>
+        </div>
+        <div class="slot-machine" id="slot-machine">
+          <div class="reel" id="reel1">🍒</div>
+          <div class="reel" id="reel2">🍋</div>
+          <div class="reel" id="reel3">🍉</div>
+        </div>
+        <button class="spin-btn" id="spin-btn" disabled>SPIN</button>
+        <div class="result-message" id="result-message"></div>
+        <div class="keep-playing" id="keep-playing"></div>
+      </div>
+      <!-- BUY COINS PANEL -->
+      <div class="panel" id="panel-coins" style="display:none;">
+        <h2>Buy Coins</h2>
+        <div class="info-bar">
+          1 Coin = 1 Spin = <span class="stat">$0.077</span><br>
+          Your Coins: <span class="stat" id="coin-count-coins">0</span>
+        </div>
+        <div class="buy-options">
+          <!-- PayPal Buy Now Buttons (replace action/hosted_button_id with your real buttons) -->
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onsubmit="return setReturnUrl(this,1);">
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="business" value="your-paypal-email@example.com">
+            <input type="hidden" name="item_name" value="1 Coin (1 Spin)">
+            <input type="hidden" name="amount" value="0.077">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="return" value="">
+            <input type="hidden" name="custom" value="1">
+            <button type="submit" class="buy-btn">Buy 1 Coin ($0.077)</button>
+          </form>
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onsubmit="return setReturnUrl(this,10);">
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="business" value="your-paypal-email@example.com">
+            <input type="hidden" name="item_name" value="10 Coins (10 Spins)">
+            <input type="hidden" name="amount" value="0.77">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="return" value="">
+            <input type="hidden" name="custom" value="10">
+            <button type="submit" class="buy-btn">Buy 10 Coins ($0.77)</button>
+          </form>
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onsubmit="return setReturnUrl(this,50);">
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="business" value="your-paypal-email@example.com">
+            <input type="hidden" name="item_name" value="50 Coins (50 Spins)">
+            <input type="hidden" name="amount" value="3.85">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="return" value="">
+            <input type="hidden" name="custom" value="50">
+            <button type="submit" class="buy-btn">Buy 50 Coins ($3.85)</button>
+          </form>
+          <div style="font-size:.93em; color:#aaa; margin-top:6px;">
+            *After payment you'll be redirected back and coins will be credited automatically.*
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      &copy; 2025 NeonSpin Casino. Play responsibly. Gambling is bad.
+    </div>
+  </div>
+  <script>
+    // UI State
+    let currentTab = 'slot';
+    let coins = 0;
+    const symbols = ["🍒", "🍋", "🍉", "⭐", "🍇", "💎", "🔔"];
+    const coinCountEl = document.getElementById('coin-count');
+    const coinCountEl2 = document.getElementById('coin-count-coins');
+    const spinBtn = document.getElementById('spin-btn');
+    const resultMessage = document.getElementById('result-message');
+    const keepPlaying = document.getElementById('keep-playing');
+    function enterCasino() {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('casino-app').style.display = 'flex';
+      updateUI();
+      // Check if returning from PayPal with coins param
+      autoCreditCoinsFromUrl();
+    }
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-slot').classList.toggle('active', tab === 'slot');
+      document.getElementById('tab-coins').classList.toggle('active', tab === 'coins');
+      document.getElementById('panel-slot').style.display = tab === 'slot' ? 'flex' : 'none';
+      document.getElementById('panel-coins').style.display = tab === 'coins' ? 'flex' : 'none';
+      updateUI();
+    }
+    function updateUI() {
+      coinCountEl.textContent = coins;
+      coinCountEl2.textContent = coins;
+      spinBtn.disabled = coins < 1;
+    }
+    function buyCoins(amount) {
+      coins += amount;
+      updateUI();
+      resultMessage.textContent = `You bought ${amount} coin${amount > 1 ? 's' : ''}.`;
+      keepPlaying.textContent = "Ready to spin again?";
+    }
+    function animateSpin(callback) {
+      let spins = 25;
+      let interval = 33;
+      let i = 0;
+      const reels = [
+        document.getElementById('reel1'),
+        document.getElementById('reel2'),
+        document.getElementById('reel3')
+      ];
+      const anim = setInterval(() => {
+        for (let j = 0; j < 3; j++) {
+          reels[j].textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        }
+        i++;
+        if (i >= spins) {
+          clearInterval(anim);
+          let idxs = [0,1,2].map(() => Math.floor(Math.random() * symbols.length));
+          while (new Set(idxs).size < 3) {
+            idxs = [0,1,2].map(() => Math.floor(Math.random() * symbols.length));
+          }
+          for (let j = 0; j < 3; j++) {
+            reels[j].textContent = symbols[idxs[j]];
+          }
+          callback();
+        }
+      }, interval);
+    }
+    function spin() {
+      if (coins < 1) return;
+      coins--;
+      updateUI();
+      spinBtn.disabled = true;
+      resultMessage.textContent = "Spinning...";
+      keepPlaying.textContent = "";
+      animateSpin(() => {
+        resultMessage.textContent = "🙁 Sorry, you lost. Try again?";
+        keepPlaying.textContent = "One more spin could change your luck! (not really)";
+        spinBtn.disabled = coins < 1;
+      });
+    }
+    spinBtn.addEventListener('click', spin);
+
+    // Helper to set PayPal return URL with ?coins=...
+    function setReturnUrl(form, amount) {
+      // Change to your actual casino app URL
+      const casinoUrl = window.location.origin + window.location.pathname + '?coins=' + amount;
+      form.querySelector('input[name="return"]').value = casinoUrl + '#casino-app';
+      return true;
+    }
+
+    // On entry, auto-credit coins if ?coins=... in URL (after PayPal)
+    function autoCreditCoinsFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const coinsToCredit = parseInt(urlParams.get('coins'));
+      if (coinsToCredit > 0) {
+        buyCoins(coinsToCredit);
+        // Remove coins param from URL to avoid double-credit
+        window.history.replaceState({}, document.title, window.location.pathname + '#casino-app');
+      }
+    }
+
+    // If user reloads with ?coins param, auto-credit
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.location.search.includes('coins=')) {
+        document.getElementById('intro').style.display = 'none';
+        document.getElementById('casino-app').style.display = 'flex';
+        autoCreditCoinsFromUrl();
+        updateUI();
+      }
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
