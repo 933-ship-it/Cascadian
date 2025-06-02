@@ -6,41 +6,292 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Roboto:wght@500&display=swap" rel="stylesheet">
   <style>
-    /* ...[CSS same as previous, omitted for brevity, use your prior clean CSS here]... */
-    body { background: linear-gradient(135deg,#1a1a2e 0%, #2c5364 100%); color: #fff; font-family: 'Roboto', sans-serif; margin:0;}
-    .center { display:flex; flex-direction:column; align-items:center; justify-content:center;}
-    .intro { min-height: 100vh; background:linear-gradient(135deg,#1a1a2e 0%, #232347 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:32px; padding:0 24px;}
-    .intro-title { font-family:'Orbitron',sans-serif; font-size:2.8em; color:#00fff0; text-shadow:0 0 24px #00fff0,0 0 12px #ff00cc; margin-bottom:8px; letter-spacing:3px;}
-    .warning-panel { background:#f44336; color:#fff; padding:32px 20px; border-radius:20px; border-bottom:4px solid #ff9800; box-shadow:0 4px 40px #000b; max-width:460px; font-size:1.2em; text-align:center; font-weight:bold; margin-bottom:12px;}
-    .enter-btn { font-family:'Orbitron',sans-serif; font-size:1.4em; padding:18px 60px; border:none; border-radius:14px; background:linear-gradient(90deg,#00fff0 0,#ff00cc 100%); color:#212128; font-weight:bold; cursor:pointer; box-shadow:0 0 16px #00fff0; transition:background 0.2s, transform 0.13s;}
-    .enter-btn:active { transform:scale(0.97);}
-    .casino-app { min-height:100vh; display:flex; flex-direction:column;}
-    .tab-bar { display:flex; gap:0; justify-content:center; background:#232347; border-radius:0 0 20px 20px; box-shadow:0 6px 30px #0007;}
-    .tab { flex:1; padding:22px 0; font-family:'Orbitron',sans-serif; font-size:1.18em; color:#fff; background:transparent; border:none; border-bottom:4px solid transparent; cursor:pointer; letter-spacing:2px; transition:border 0.18s, background 0.18s;}
-    .tab.active { border-bottom:4px solid #ff00cc; background:#231a2c; color:#00fff0; font-weight:bold;}
-    .casino-panels { display:flex; justify-content:center; align-items:flex-start; flex:1; padding:32px 0 0 0; min-height:70vh; background:linear-gradient(135deg,#1a1a2e 70%, #1e3c72 100%);}
-    .panel { background:rgba(36,36,60,0.97); border-radius:20px; box-shadow:0 4px 40px #000b; padding:38px 36px 38px 36px; margin:0 18px; min-width:330px; max-width:420px; width:100%; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px;}
-    @media (max-width: 800px) { .casino-panels {flex-direction:column;} .panel { margin:18px auto; } }
-    h2 { font-family:'Orbitron',sans-serif; color:#00fff0; font-size:2em; margin:0 0 10px 0; letter-spacing:2px; text-shadow:0 0 8px #00fff0;}
-    .slot-machine { display:flex; justify-content:center; align-items:center; background:#101032; border-radius:18px; margin:28px 0 18px 0; box-shadow:0 0 32px #00fff044; padding:18px 0; border:2px solid #ff00cc; position:relative; gap:18px;}
-    .reel { font-size:3.6em; margin:0 12px; width:1.2em; text-shadow:0 0 18px #ff00cc, 0 0 6px #00fff0; animation:neon-flicker 2s infinite alternate;}
-    @keyframes neon-flicker { 0%,100%{text-shadow:0 0 18px #ff00cc,0 0 6px #00fff0;} 80%{text-shadow:0 0 10px #ff00cc,0 0 2px #00fff0;} 90%{opacity:0.92;} }
-    .spin-btn, .buy-btn { font-family:'Orbitron',sans-serif; font-size:1.27em; padding:15px 44px; border:none; border-radius:12px; background:linear-gradient(90deg,#00fff0 0,#ff00cc 100%); color:#212128; font-weight:bold; cursor:pointer; margin:10px 0 0 0; box-shadow:0 0 16px #00fff088; outline:none; transition:transform 0.13s, box-shadow 0.18s;}
-    .spin-btn:active, .buy-btn:active { transform:scale(0.97); box-shadow:0 0 4px #ff00cc;}
-    .spin-btn:disabled { background:#33364c; color:#aaa; cursor:not-allowed; box-shadow:none;}
-    .info-bar { margin:12px 0 8px 0; font-size:1.13em; color:#ff00cc; letter-spacing:1.1px;}
-    .stat { color:#00fff0; font-weight:bold;}
-    .result-message { font-size:1.28em; color:#ff00cc; margin:14px 0 0 0; font-family:'Orbitron',sans-serif;}
-    .keep-playing { margin:16px 0 0 0; color:#00fff0; font-size:1.07em; font-style:italic; text-shadow:0 0 10px #00fff033;}
-    .buy-options { display:flex; flex-direction:column; gap:22px; margin:26px 0 0 0; align-items:center;}
-    .footer { color:#bbb; font-size:.99em; margin:40px 0 10px 0; text-align:center; opacity:0.75; letter-spacing:1.1px;}
+    :root {
+      --neon-pink: #ff00cc;
+      --neon-cyan: #00fff0;
+      --neon-orange: #ff9800;
+      --bg-dark: #181829;
+      --bg-light: #25254b;
+      --panel-radius: 22px;
+      --shadow: 0 4px 44px #000b;
+    }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, #2c5364 100%);
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+    }
+    .intro {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, #232347 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      padding: 0 24px;
+      animation: fadein 1s;
+    }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+    .intro-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3em;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 32px var(--neon-cyan), 0 0 14px var(--neon-pink);
+      margin-bottom: 10px;
+      letter-spacing: 3px;
+      background: -webkit-linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .warning-panel {
+      background: #f44336;
+      color: #fff;
+      padding: 32px 24px;
+      border-radius: var(--panel-radius);
+      border-bottom: 4px solid var(--neon-orange);
+      box-shadow: var(--shadow);
+      max-width: 500px;
+      font-size: 1.23em;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 14px;
+      animation: warning-bounce 1.2s;
+    }
+    @keyframes warning-bounce {
+      0% { transform: scale(0.9); }
+      60% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+    .enter-btn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4em;
+      padding: 18px 70px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(90deg, var(--neon-cyan) 0, var(--neon-pink) 100%);
+      color: #232347;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 18px var(--neon-cyan);
+      transition: background 0.2s, transform 0.13s, box-shadow 0.13s;
+      text-shadow: 0 0 6px #fff8;
+      outline: none;
+      margin-top: 8px;
+    }
+    .enter-btn:hover { background:linear-gradient(90deg,#00fff0 0,#ff00cc 90%); box-shadow:0 0 28px #ff00ccaa; }
+    .enter-btn:active { transform: scale(0.97); }
+    .casino-app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      animation: fadein 0.8s;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      background: var(--bg-light);
+      border-radius: 0 0 var(--panel-radius) var(--panel-radius);
+      box-shadow: 0 6px 30px #0007;
+    }
+    .tab {
+      flex: 1;
+      padding: 22px 0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.19em;
+      color: #fff;
+      background: transparent;
+      border: none;
+      border-bottom: 4px solid transparent;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: border 0.18s, background 0.18s, color 0.18s;
+    }
+    .tab.active {
+      border-bottom: 4px solid var(--neon-pink);
+      background: #231a2c;
+      color: var(--neon-cyan);
+      font-weight: bold;
+      text-shadow: 0 0 10px var(--neon-cyan)99;
+    }
+    .casino-panels {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex: 1;
+      padding: 36px 0 0 0;
+      min-height: 70vh;
+      background: linear-gradient(135deg, var(--bg-dark) 70%, #1e3c72 100%);
+    }
+    .panel {
+      background: rgba(36,36,60,0.97);
+      border-radius: var(--panel-radius);
+      box-shadow: var(--shadow);
+      padding: 40px 38px 38px 38px;
+      margin: 0 20px;
+      min-width: 340px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: fadein 0.8s;
+    }
+    @media (max-width: 900px) {
+      .casino-panels { flex-direction: column; }
+      .panel { margin: 22px auto; }
+    }
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-cyan);
+      font-size: 2.05em;
+      margin: 0 0 10px 0;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px var(--neon-cyan);
+    }
+    /* Slot machine UI */
+    .slot-machine {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #101032;
+      border-radius: 22px;
+      margin: 30px 0 18px 0;
+      box-shadow: 0 0 44px var(--neon-cyan)55;
+      padding: 18px 0;
+      border: 2px solid var(--neon-pink);
+      position: relative;
+      gap: 22px;
+      min-width: 240px;
+      max-width: 100%;
+      transition: box-shadow 0.19s;
+    }
+    .slot-machine:focus-within, .slot-machine:active {
+      box-shadow: 0 0 60px var(--neon-pink)66;
+    }
+    .reel {
+      font-size: 3.8em;
+      margin: 0 15px;
+      width: 1.3em;
+      text-shadow: 0 0 22px var(--neon-pink), 0 0 10px var(--neon-cyan);
+      animation: neon-flicker 2s infinite alternate;
+      background: linear-gradient(180deg, #232347 60%, #181829 100%);
+      border-radius: 12px;
+      padding: 6px 12px;
+      border: 1.5px solid #00fff0b0;
+      transition: background 0.13s;
+    }
+    @keyframes neon-flicker {
+      0%, 100% { text-shadow: 0 0 22px var(--neon-pink), 0 0 10px var(--neon-cyan);}
+      80% { text-shadow: 0 0 12px var(--neon-pink), 0 0 2px var(--neon-cyan);}
+      90% { opacity: 0.96;}
+    }
+    .spin-btn, .buy-btn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3em;
+      padding: 15px 50px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(90deg,var(--neon-cyan) 0,var(--neon-pink) 100%);
+      color: #232347;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 18px var(--neon-cyan)99;
+      outline: none;
+      margin: 12px 0 0 0;
+      transition: background 0.13s, transform 0.13s, box-shadow 0.13s;
+    }
+    .spin-btn:hover, .buy-btn:hover {
+      background: linear-gradient(90deg,var(--neon-pink) 0,var(--neon-cyan) 100%);
+      color: #fff;
+      box-shadow: 0 0 28px var(--neon-pink)aa;
+    }
+    .spin-btn:active, .buy-btn:active { transform: scale(0.97); box-shadow: 0 0 6px var(--neon-pink);}
+    .spin-btn:disabled {
+      background: #33364c !important;
+      color: #aaa !important;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .info-bar {
+      margin: 12px 0 8px 0;
+      font-size: 1.14em;
+      color: var(--neon-pink);
+      letter-spacing: 1.1px;
+      background: #232347cc;
+      border-radius: 10px;
+      padding: 8px 0 8px 0;
+      width: 94%;
+      box-sizing: border-box;
+    }
+    .stat {
+      color: var(--neon-cyan);
+      font-weight: bold;
+    }
+    .result-message {
+      font-size: 1.3em;
+      color: var(--neon-pink);
+      margin: 16px 0 0 0;
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: 0 0 6px #fff8;
+      min-height: 1.7em;
+    }
+    .keep-playing {
+      margin: 16px 0 0 0;
+      color: #00fff0;
+      font-size: 1.09em;
+      font-style: italic;
+      text-shadow: 0 0 10px var(--neon-cyan)33;
+      min-height: 1.31em;
+    }
+    .buy-options {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin: 30px 0 0 0;
+      align-items: center;
+      width: 100%;
+    }
+    .footer {
+      color: #bbb;
+      font-size: 1.06em;
+      margin: 42px 0 12px 0;
+      text-align: center;
+      opacity: 0.82;
+      letter-spacing: 1.1px;
+      background: #181829;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 0 16px #0005;
+      width: 96%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Subtle neon glow effect for interactive panels */
+    .panel:focus-within, .panel:hover {
+      box-shadow: 0 0 64px var(--neon-pink)44, var(--shadow);
+      border: 1.5px solid var(--neon-cyan)66;
+    }
+    /* Responsive font sizing */
+    @media (max-width: 460px) {
+      .panel, .casino-panels { min-width: 95vw !important; padding: 14px 3vw !important; }
+      .reel { font-size: 2.4em; }
+      .intro-title { font-size: 2.1em; }
+      .spin-btn, .buy-btn { font-size: 1em; padding: 10px 20px; }
+    }
   </style>
 </head>
 <body>
   <div id="intro" class="intro">
     <div class="intro-title">🎰 NeonSpin Casino 🎰</div>
     <div class="warning-panel">
-      ⚠️ <b>WARNING</b>: Gambling is bad and can be addictive. This game is designed so you will never win. Please do not develop a gambling habit. 
+      ⚠️ <b>WARNING</b>: Gambling is bad and can be addictive.<br>
+      This game is designed so you will never win. Please do not develop a gambling habit.<br>
       If you or someone you know has a gambling problem, seek help immediately.<br/><br/>
       <span style="font-weight:normal;font-size:0.94em;opacity:0.86;">
         <a href="https://www.begambleaware.org/" style="color:#fff;text-decoration:underline;" target="_blank" rel="noopener">BeGambleAware.org</a>
@@ -48,7 +299,6 @@
     </div>
     <button class="enter-btn" onclick="enterCasino()">Enter Casino</button>
   </div>
-
   <div id="casino-app" class="casino-app" style="display:none;">
     <div class="tab-bar">
       <button class="tab active" id="tab-slot" onclick="switchTab('slot')">Slot Machine</button>
@@ -63,10 +313,10 @@
           Win Chance: <span class="stat">0%</span> <br>
           Your Coins: <span class="stat" id="coin-count">0</span>
         </div>
-        <div class="slot-machine" id="slot-machine">
-          <div class="reel" id="reel1">🍒</div>
-          <div class="reel" id="reel2">🍋</div>
-          <div class="reel" id="reel3">🍉</div>
+        <div class="slot-machine" id="slot-machine" tabindex="0">
+          <div class="reel" id="reel1" aria-label="reel 1">🍒</div>
+          <div class="reel" id="reel2" aria-label="reel 2">🍋</div>
+          <div class="reel" id="reel3" aria-label="reel 3">🍉</div>
         </div>
         <button class="spin-btn" id="spin-btn" disabled>SPIN</button>
         <div class="result-message" id="result-message"></div>
@@ -80,7 +330,7 @@
           Your Coins: <span class="stat" id="coin-count-coins">0</span>
         </div>
         <div class="buy-options">
-          <!-- PayPal Buy Now Buttons (replace action/hosted_button_id with your real buttons) -->
+          <!-- PayPal Buy Now Buttons (replace business and item_name with your real details) -->
           <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onsubmit="return setReturnUrl(this,1);">
             <input type="hidden" name="cmd" value="_xclick">
             <input type="hidden" name="business" value="your-paypal-email@example.com">
@@ -89,7 +339,7 @@
             <input type="hidden" name="currency_code" value="USD">
             <input type="hidden" name="return" value="">
             <input type="hidden" name="custom" value="1">
-            <button type="submit" class="buy-btn">Buy 1 Coin ($0.077)</button>
+            <button type="submit" class="buy-btn">🪙 Buy 1 Coin ($0.077)</button>
           </form>
           <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onsubmit="return setReturnUrl(this,10);">
             <input type="hidden" name="cmd" value="_xclick">
@@ -99,7 +349,7 @@
             <input type="hidden" name="currency_code" value="USD">
             <input type="hidden" name="return" value="">
             <input type="hidden" name="custom" value="10">
-            <button type="submit" class="buy-btn">Buy 10 Coins ($0.77)</button>
+            <button type="submit" class="buy-btn">🪙🪙 Buy 10 Coins ($0.77)</button>
           </form>
           <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onsubmit="return setReturnUrl(this,50);">
             <input type="hidden" name="cmd" value="_xclick">
@@ -109,10 +359,10 @@
             <input type="hidden" name="currency_code" value="USD">
             <input type="hidden" name="return" value="">
             <input type="hidden" name="custom" value="50">
-            <button type="submit" class="buy-btn">Buy 50 Coins ($3.85)</button>
+            <button type="submit" class="buy-btn">🪙🪙🪙 Buy 50 Coins ($3.85)</button>
           </form>
-          <div style="font-size:.93em; color:#aaa; margin-top:6px;">
-            *After payment you'll be redirected back and coins will be credited automatically.*
+          <div style="font-size:.98em; color:#aaa; margin-top:7px;">
+            <span style="color:var(--neon-cyan)">ℹ️</span> After payment you'll be redirected back and coins will be credited automatically.
           </div>
         </div>
       </div>
@@ -125,7 +375,9 @@
     // UI State
     let currentTab = 'slot';
     let coins = 0;
-    const symbols = ["🍒", "🍋", "🍉", "⭐", "🍇", "💎", "🔔"];
+    const symbols = [
+      "🍒", "🍋", "🍉", "⭐", "🍇", "💎", "🔔", "🍀", "🥝"
+    ];
     const coinCountEl = document.getElementById('coin-count');
     const coinCountEl2 = document.getElementById('coin-count-coins');
     const spinBtn = document.getElementById('spin-btn');
@@ -135,7 +387,6 @@
       document.getElementById('intro').style.display = 'none';
       document.getElementById('casino-app').style.display = 'flex';
       updateUI();
-      // Check if returning from PayPal with coins param
       autoCreditCoinsFromUrl();
     }
     function switchTab(tab) {
@@ -154,23 +405,28 @@
     function buyCoins(amount) {
       coins += amount;
       updateUI();
-      resultMessage.textContent = `You bought ${amount} coin${amount > 1 ? 's' : ''}.`;
+      resultMessage.textContent = `🪙 You bought ${amount} coin${amount > 1 ? 's' : ''}.`;
       keepPlaying.textContent = "Ready to spin again?";
     }
     function animateSpin(callback) {
-      let spins = 25;
-      let interval = 33;
+      let spins = 30;
+      let interval = 28;
       let i = 0;
       const reels = [
         document.getElementById('reel1'),
         document.getElementById('reel2'),
         document.getElementById('reel3')
       ];
+      const sounds = [
+        new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfa976e.mp3'), // spin tick
+        new Audio('https://cdn.pixabay.com/audio/2022/07/26/audio_124bfa976e.mp3')
+      ];
       const anim = setInterval(() => {
         for (let j = 0; j < 3; j++) {
           reels[j].textContent = symbols[Math.floor(Math.random() * symbols.length)];
         }
         i++;
+        if (i % 7 === 0) { try { sounds[0].currentTime = 0; sounds[0].play(); } catch(e){} }
         if (i >= spins) {
           clearInterval(anim);
           let idxs = [0,1,2].map(() => Math.floor(Math.random() * symbols.length));
@@ -189,7 +445,7 @@
       coins--;
       updateUI();
       spinBtn.disabled = true;
-      resultMessage.textContent = "Spinning...";
+      resultMessage.textContent = "🎲 Spinning...";
       keepPlaying.textContent = "";
       animateSpin(() => {
         resultMessage.textContent = "🙁 Sorry, you lost. Try again?";
@@ -201,7 +457,6 @@
 
     // Helper to set PayPal return URL with ?coins=...
     function setReturnUrl(form, amount) {
-      // Change to your actual casino app URL
       const casinoUrl = window.location.origin + window.location.pathname + '?coins=' + amount;
       form.querySelector('input[name="return"]').value = casinoUrl + '#casino-app';
       return true;
@@ -217,7 +472,6 @@
         window.history.replaceState({}, document.title, window.location.pathname + '#casino-app');
       }
     }
-
     // If user reloads with ?coins param, auto-credit
     window.addEventListener('DOMContentLoaded', () => {
       if (window.location.search.includes('coins=')) {
@@ -227,7 +481,12 @@
         updateUI();
       }
     });
-
+    // Keyboard accessibility: Space or Enter triggers spin if focused
+    document.getElementById('slot-machine').addEventListener('keydown', (e) => {
+      if ((e.key === " " || e.key === "Enter") && !spinBtn.disabled) {
+        spin();
+      }
+    });
     updateUI();
   </script>
 </body>
